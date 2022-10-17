@@ -1,4 +1,4 @@
-# TokenizedBallot Full stack application
+# TokenizedBallot - full stack application
 
 ## Start with
 ```bash
