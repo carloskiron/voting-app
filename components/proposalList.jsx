@@ -1,6 +1,3 @@
-import Head from 'next/head'
-import { useEffect, useState } from 'react';
-import { Container, Row, Card, Button } from 'react-bootstrap'
 
 export default function ProposalList({ proposals }) {
 

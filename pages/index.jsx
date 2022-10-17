@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { useEffect, useState } from 'react';
 import { Container, Row, Card, Button } from 'react-bootstrap'
-import ProposalList from '../components/ProposalList';
+import ProposalList from '../components/proposalList.jsx';
 
 export default function Home() {
 
@@ -70,7 +70,7 @@ export default function Home() {
                 <Card.Text>
                   Cast your vote!
                 </Card.Text>
-                <Button variant="primary"  href="#">
+                <Button variant="primary" href="#">
                   Vote &rarr;
                 </Button>
               </Card.Body>
