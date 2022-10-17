@@ -23,7 +23,7 @@ async function handler(req, res) {
   // Run the middleware
   await runMiddleware(req, res, cors);
 
-  //check the expected methog
+  //check the expected method
   if (req.method === "POST") {
 
     const {var1, var2} = req.body;

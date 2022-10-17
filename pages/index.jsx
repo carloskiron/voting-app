@@ -1,21 +1,64 @@
-import Head from 'next/head'
-import { useEffect, useState } from 'react';
-import { Container, Row, Card, Button } from 'react-bootstrap'
-import ProposalList from '../components/proposalList.jsx';
+import { ethers } from "ethers";
+import Head from "next/head";
+import { useEffect, useState } from "react";
+import { Container, Row, Card, Button } from "react-bootstrap";
+import ProposalList from "../components/proposalList.jsx";
 
 export default function Home() {
-
   const [proposals, setProposals] = useState([]);
+  const [name, setName] = useState("");
+  const [tokensMinted, setTokenMinted] = useState(false);
   const [loadingProposals, setLoadingProposals] = useState(true);
+
+  const [isConnected, setIsConnected] = useState(false);
+  const [signer, setSigner] = useState(undefined);
+
+  async function connect() {
+    console.info("connecting to metamask");
+    if (typeof window.ethereum !== "undefined") {
+      try {
+        await ethereum.request({ method: "eth_requestAccounts" });
+        setIsConnected(true);
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        setSigner(provider.getSigner());
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      setIsConnected(false);
+    }
+  }
 
   const loadProposals = async () => {
     const result = await fetch("/api/tokenizedBallot/getProposals");
     const data = await result.json();
     setProposals(data);
     setLoadingProposals(false);
-  }
+  };
+  const requestTokens = async () => {
+    if (!isConnected || !signer) {
+      return;
+    }
+    const message = JSON.stringify({ name });
+    const signature = await signer.signMessage(message);
+    const result = await fetch("/api/tokenizedBallot/claimTokens", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message,
+        signature,
+      }),
+    });
+    const data = await result.json();
+    setTokenMinted(data.result);
+  };
+
+  const handleChange = (event) => {
+    setName(event.target.value);
+  };
 
   useEffect(() => {
+    connect();
     loadProposals();
   }, []);
 
@@ -35,7 +78,9 @@ export default function Home() {
               <Card.Body>
                 <Card.Title>Proposals</Card.Title>
                 <Card.Text>
-                  {loadingProposals ? "Loading proposals..." : "Current voting proposals:"}
+                  {loadingProposals
+                    ? "Loading proposals..."
+                    : "Current voting proposals:"}
                 </Card.Text>
                 {!loadingProposals && <ProposalList proposals={proposals} />}
               </Card.Body>
@@ -43,9 +88,7 @@ export default function Home() {
             <Card className="sml-card">
               <Card.Body>
                 <Card.Title>Recent votes</Card.Title>
-                <Card.Text>
-                  Last on-chain votes:
-                </Card.Text>
+                <Card.Text>Last on-chain votes:</Card.Text>
               </Card.Body>
             </Card>
           </Row>
@@ -53,23 +96,26 @@ export default function Home() {
             <Card className="sml-card">
               <Card.Body>
                 <Card.Title>Voting tokens</Card.Title>
-                <Card.Text>
-                  Request voting tokens.
-                </Card.Text>
-                <Button
-                  variant="primary"
-                  href="#"
-                >
-                  Mint &rarr;
-                </Button>
+                <Card.Text>Request voting tokens.</Card.Text>
+                <form>
+                  <label>
+                    Name:
+                    <input type="text" value={name} onChange={handleChange} />
+                  </label>
+                  <Button
+                    variant="primary"
+                    type="button"
+                    onClick={requestTokens}
+                  >
+                    Mint &rarr;
+                  </Button>
+                </form>
               </Card.Body>
             </Card>
             <Card className="sml-card">
               <Card.Body>
                 <Card.Title>Vote</Card.Title>
-                <Card.Text>
-                  Cast your vote!
-                </Card.Text>
+                <Card.Text>Cast your vote!</Card.Text>
                 <Button variant="primary" href="#">
                   Vote &rarr;
                 </Button>
@@ -85,9 +131,10 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '} <span className='text-secondary'>Group 2 - Solidity Bootcamp</span>
+          Powered by{" "}
+          <span className="text-secondary">Group 2 - Solidity Bootcamp</span>
         </a>
       </footer>
     </Container>
-  )
+  );
 }
