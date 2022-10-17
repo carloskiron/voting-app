@@ -97,19 +97,21 @@ export default function Home() {
               <Card.Body>
                 <Card.Title>Voting tokens</Card.Title>
                 <Card.Text>Request voting tokens.</Card.Text>
-                <form>
-                  <label>
-                    Name:
-                    <input type="text" value={name} onChange={handleChange} />
-                  </label>
-                  <Button
-                    variant="primary"
-                    type="button"
-                    onClick={requestTokens}
-                  >
-                    Mint &rarr;
-                  </Button>
-                </form>
+                {!tokensMinted && (
+                  <form>
+                    <label>
+                      Name:
+                      <input type="text" value={name} onChange={handleChange} />
+                    </label>
+                    <Button
+                      variant="primary"
+                      type="button"
+                      onClick={requestTokens}
+                    >
+                      Mint &rarr;
+                    </Button>
+                  </form>)}
+                  {tokensMinted && <p>Tokens have been sent your way!</p>}
               </Card.Body>
             </Card>
             <Card className="sml-card">

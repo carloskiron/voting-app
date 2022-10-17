@@ -4,8 +4,8 @@ import tokenizedBallotJSON from "../assets/TokenizedBallot.json";
 import { ITokenizedBallotService } from "./ITokenizedBallotService";
 import { injectable } from "tsyringe";
 
-const MTOKEN_ADDRESS = "0xbed2B6C106a1b60D1a63FD71a4bc24cB8D8808cc"; // MyToken
-const TBALLOT_ADDRESS = "0x79AA6C0376a693D66EC6c7347c9c1E19a9f7D283"; // TokenizedBallot
+const MTOKEN_ADDRESS = "0x9aaeAf4702E023c91733007cEcd23E1e726Eff48"; // MyToken
+const TBALLOT_ADDRESS = "0x42a180cb367c1BD0E98EFb028331abaAa4d85907"; // TokenizedBallot
 const MTOKEN_ABI = tokenJSON.abi; // MyToken contract ABI
 const TBALLOT_ABI = tokenizedBallotJSON.abi; // TokenizedBallot contract ABI
 const NUMBER_PROPOSALS = 3;
