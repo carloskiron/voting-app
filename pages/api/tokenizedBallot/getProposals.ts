@@ -27,7 +27,7 @@ function runMiddleware(req, res, fn) {
 async function handler(req, res) {
   // Run the middleware
   await runMiddleware(req, res, cors);
-  //check the expected methog
+  //check the expected method
   if (req.method === "GET") {
     const instance = container.resolve(TokenizedBallotService) as ITokenizedBallotService;
     return res.status(200).json( await instance.getProlposals() );
