@@ -1,72 +1,77 @@
 import Head from 'next/head'
+import { useEffect, useState } from 'react';
 import { Container, Row, Card, Button } from 'react-bootstrap'
+import ProposalList from '../components/ProposalList';
 
 export default function Home() {
+
+  const [proposals, setProposals] = useState([]);
+  const [loadingProposals, setLoadingProposals] = useState(true);
+
+  const loadProposals = async () => {
+    const result = await fetch("/api/tokenizedBallot/getProposals");
+    const data = await result.json();
+    setProposals(data);
+    setLoadingProposals(false);
+  }
+
+  useEffect(() => {
+    loadProposals();
+  }, []);
+
   return (
     <Container className="md-container">
       <Head>
-        <title>ReactJS with react-bootstrap</title>
+        <title>Tokenized Ballot Dapp</title>
         <link rel="icon" href="/favicon-32x32.png" />
       </Head>
       <Container>
         <h1>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          Welcome to <a href="#">Tokenized Ballot</a>
         </h1>
-        <p>
-          Get started by editing <code>pages/index.js</code>
-        </p>
         <Container>
           <Row className="justify-content-md-between">
             <Card className="sml-card">
               <Card.Body>
-                <Card.Title>Documentation</Card.Title>
+                <Card.Title>Proposals</Card.Title>
                 <Card.Text>
-                  Find in-depth information about Next.js features and API.
+                  {loadingProposals ? "Loading proposals..." : "Current voting proposals:"}
                 </Card.Text>
-                <Button variant="primary" href="https://nextjs.org/docs">
-                  More &rarr;
-                </Button>
+                {!loadingProposals && <ProposalList proposals={proposals} />}
               </Card.Body>
             </Card>
             <Card className="sml-card">
               <Card.Body>
-                <Card.Title>Learn</Card.Title>
+                <Card.Title>Recent votes</Card.Title>
                 <Card.Text>
-                  Learn about Next.js in an interactive course with quizzes!
+                  Last on-chain votes:
                 </Card.Text>
-                <Button variant="primary" href="https://nextjs.org/learn">
-                  More &rarr;
-                </Button>
               </Card.Body>
             </Card>
           </Row>
           <Row className="justify-content-md-between">
             <Card className="sml-card">
               <Card.Body>
-                <Card.Title>Examples</Card.Title>
+                <Card.Title>Voting tokens</Card.Title>
                 <Card.Text>
-                  Discover and deploy boilerplate example Next.js projects.
+                  Request voting tokens.
                 </Card.Text>
                 <Button
                   variant="primary"
-                  href="https://github.com/vercel/next.js/tree/canary/examples"
+                  href="#"
                 >
-                  More &rarr;
+                  Mint &rarr;
                 </Button>
               </Card.Body>
             </Card>
             <Card className="sml-card">
               <Card.Body>
-                <Card.Title>Deploy</Card.Title>
+                <Card.Title>Vote</Card.Title>
                 <Card.Text>
-                  Instantly deploy your Next.js site to a public URL with
-                  Vercel.
+                  Cast your vote!
                 </Card.Text>
-                <Button
-                  variant="primary"
-                  href="https://vercel.com/new?utm_source=github&utm_medium=example&utm_campaign=next-example"
-                >
-                  More &rarr;
+                <Button variant="primary"  href="#">
+                  Vote &rarr;
                 </Button>
               </Card.Body>
             </Card>
@@ -80,8 +85,7 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className="sml-logo" />
+          Powered by{' '} <span className='text-secondary'>Group 2 - Solidity Bootcamp</span>
         </a>
       </footer>
     </Container>
